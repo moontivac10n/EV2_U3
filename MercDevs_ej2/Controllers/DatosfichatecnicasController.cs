@@ -258,7 +258,7 @@ namespace MercDevs_ej2.Controllers
             var mailMessage = new MailMessage
             {
                 From = new MailAddress("felipe.castillo.barraza@cftmail.cl"),
-                Subject = "Su Ficha Técnica",
+                Subject = $"MercyDeveloper Ficha Tecnica n°{fichaTecnica.IdDatosFichaTecnica}",
                 Body = $"Estimado/a {cliente.Nombre},\n\nPuede ver su ficha técnica en el siguiente enlace: {enlace}",
                 IsBodyHtml = false,
             };
