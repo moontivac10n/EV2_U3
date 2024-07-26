@@ -1,0 +1,343 @@
+﻿@model MercDevs_ej2.Models.Datosfichatecnica
+
+
+<h1>Datos Ficha Tecnica</h1>
+    <div class="d-flex justify-content-center mb-4">
+    <button id="exportPDF" class="btn-with-img">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z" />
+        </svg>
+    </button>
+        <button id="notificarCorreo" class="btn btn-secondary">
+            <i class="fas fa-envelope"></i> Notificar
+        </button>
+    </div>
+<table class="table table-dark table-striped border border-light-subtle border-3">
+    <thead style="text-align:center">
+        <tr>
+            <th colspan="3">Datos Ficha Tecnica</th>
+        </tr>
+        <tr>
+            <th class="border-end">ID Ficha: @Model.IdDatosFichaTecnica</th>
+            <th class="border-end">Fecha Inicio: @(Model.FechaInicio?.ToString("dd/MM/yyyy"))</th>
+            <th class="border-end">Fecha Finalizacion: @(Model.FechaFinalizacion?.ToString("dd/MM/yyyy"))</th>
+    </thead>
+        </tr>
+</table>
+
+<table class="table table-dark table-striped border border-light-subtle border-3">
+    <thead style="text-align:center">
+        <tr>
+            <th colspan="3">Datos del Cliente</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th class="border-end">Nombre: @Model.RecepcionEquipo?.IdClienteNavigation.Nombre</t>
+            <th class="border-end">Apellido: @Model.RecepcionEquipo?.IdClienteNavigation.Apellido</th>
+            <th class="border-end">Celular: @Model.RecepcionEquipo?.IdClienteNavigation.Telefono</th>
+        </tr>
+        <tr>
+            <td colspan="2" class="border-end">Correo: @Model.RecepcionEquipo?.IdClienteNavigation.Correo</td>
+            <td colspan="2" class="border-end">Dirección: @Model.RecepcionEquipo?.IdClienteNavigation.Direccion</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<table class="table table-dark table-striped border border-light-subtle border-3">
+    <thead style="text-align:center">
+        <tr>
+            <th colspan="3">Datos Recepcion de Equipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th class="border-end">Fecha: @Model.RecepcionEquipo?.Fecha</t>
+            <th class="border-end">
+                Tipo Pc:                 @{
+                        string tipopc = "";
+                        switch (Model.RecepcionEquipo.TipoPc)
+                        {
+                            case 0:
+                                tipopc = "Pc Torre";
+                                break;
+                            case 1:
+                                tipopc = "Notebook";
+                                break;
+                            case 2:
+                                tipopc = "All in one";
+                                break;
+                        }
+                        @tipopc
+                    }
+            </th>
+            <th class="border-end">Accesorios: @Model.RecepcionEquipo?.Accesorio</th>
+        </tr>
+        <tr>
+            <th class="border-end">MarcaPc: @Model.RecepcionEquipo?.MarcaPc</t>
+            <th class="border-end">ModeloPc: @Model.RecepcionEquipo?.ModeloPc</th>
+            <th class="border-end">Numero Serie: @Model.RecepcionEquipo?.Nserie</th>
+        </tr>
+        <tr>
+            <th class="border-end">
+                Capacidad RAM: @{
+                    string capacidadram = "";
+                    switch (Model.RecepcionEquipo.CapacidadRam)
+                    {
+                        case 0:
+                            capacidadram = "4 GB";
+                            break;
+                        case 1:
+                            capacidadram = "6 GB";
+                            break;
+                        case 2:
+                            capacidadram = "8 GB";
+                            break;
+                        case 3:
+                            capacidadram = "12 GB";
+                            break;
+                        case 4:
+                            capacidadram = "OTRA";
+                            break;
+                    }
+                    @capacidadram
+                }</t>
+            <th class="border-end">
+                Tipo GPU: @{
+                        string tipogpu = "";
+                        switch (Model.RecepcionEquipo.TipoGpu)
+                        {
+                            case 0:
+                                tipogpu = "Chip integrado";
+                                break;
+                            case 1:
+                                tipogpu = "Tarjeta";
+                                break;
+                        }
+                        @tipogpu
+                    }
+            </th>
+            <th class="border-end">Graficos: @Model.RecepcionEquipo?.Grafico</th>
+        </tr>
+        <tr>
+            <td colspan="2" class="border-end">
+                Tipo Almacenamiento: @{
+                    string tipoalmacenamiento = "";
+                    switch (Model.RecepcionEquipo.TipoAlmacenamiento)
+                    {
+                        case 0:
+                            tipoalmacenamiento = "HDD";
+                            break;
+                        case 1:
+                            tipoalmacenamiento = "SSD SATA";
+                            break;
+                        case 2:
+                            tipoalmacenamiento = "SSD M.2";
+                            break;
+                        case 3:
+                            tipoalmacenamiento = "SSD NVM M.2";
+                            break;
+                    }
+                    @tipoalmacenamiento
+                }
+            </td>
+            <td colspan="2" class="border-end">Capacidad Almacenamiento: @Model.RecepcionEquipo?.CapacidadAlmacenamiento</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<table class="table table-dark table-striped border border-light-subtle border-3">
+    <thead style="text-align:center">
+        <tr>
+            <th colspan="3">Datos Ficha Tecnica</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th class="border-end">
+                S.O instalado: @{
+                    string soinstalado = "";
+                    switch (Model.Soinstalado)
+                    {
+                        case 0:
+                            soinstalado = "Windows 10";
+                            break;
+                        case 1:
+                            soinstalado = "Windows 11";
+                            break;
+                        case 2:
+                            soinstalado = "Linux";
+                            break;
+                    }
+                    @soinstalado
+                }
+                </t>
+            <th class="border-end">
+                Suite oficce instalada: @{
+                        string suiteofficeinstalada = "";
+                        switch (Model.SuiteOfficeInstalada)
+                        {
+                            case 0:
+                                suiteofficeinstalada = "Microsoft Office 2013";
+                                break;
+                            case 1:
+                                suiteofficeinstalada = "Microsoft Office 2019";
+                                break;
+                            case 2:
+                                suiteofficeinstalada = "Microsoft Office 365";
+                                break;
+                            case 3:
+                                suiteofficeinstalada = "OpenOffice";
+                                break;
+                        }
+                        @suiteofficeinstalada
+                    }
+            </th>
+            <th class="border-end">
+                Lector PDF instalado: @{
+                        string lectorpdfinstalado = "";
+                        switch (Model.LectorPdfinstalado)
+                        {
+                            case 0:
+                                lectorpdfinstalado = "No Instalado";
+                                break;
+                            case 1:
+                                lectorpdfinstalado = "Instalado";
+                                break;
+                            case 2:
+                                lectorpdfinstalado = "No Aplica";
+                                break;
+                        }
+                        @lectorpdfinstalado
+                    }
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2" class="border-end">
+                Navegador Web instalado: @{
+                    string navegadorwebinstalado = "";
+                    switch (Model.NavegadorWebInstalado)
+                    {
+                        case 0:
+                            navegadorwebinstalado = "No Instalado";
+                            break;
+                        case 1:
+                            navegadorwebinstalado = "Chrome";
+                            break;
+                        case 2:
+                            navegadorwebinstalado = "Chrome y Firefox";
+                            break;
+                    }
+                    @navegadorwebinstalado
+                }
+            </td>
+            <td colspan="2" class="border-end">
+                Antivirus instalado: @{
+                    string antivirusinstalado = "";
+                    switch (Model.AntivirusInstalado)
+                    {
+                        case "0":
+                            antivirusinstalado = "No Instalado";
+                            break;
+                        case "1":
+                            antivirusinstalado = "Avast";
+                            break;
+                        case "2":
+                            antivirusinstalado = "Mcfee";
+                            break;
+                    }
+                    @antivirusinstalado
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<table class="table table-dark table-striped border border-light-subtle border-3">
+    <thead style="text-align:center">
+        <tr>
+            <th colspan="3">Diagnostico y Soluciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+                @if (Model.Diagnosticosolucions == null || !Model.Diagnosticosolucions.Any())
+                {
+                <th class="border-end">No hay diagnostico disponible</th>
+                }
+                else
+                {
+                    foreach (var diagnostico in Model.Diagnosticosolucions)
+                    {
+                    <th class="border-end">Diagnostico: @diagnostico.DescripcionDiagnostico</th>
+                    }
+                }
+        </tr>
+        <tr>
+            @if (Model.Diagnosticosolucions == null || !Model.Diagnosticosolucions.Any())
+            {
+                <th class="border-end">No hay solucion disponible</th>
+            }
+            else
+            {
+                foreach (var diagnostico in Model.Diagnosticosolucions)
+                {
+                    <th class="border-end">Solucion: @diagnostico.DescripcionSolucion</th>
+                }
+            }
+        </tr>
+    </tbody>
+ </table>
+
+<table class="table table-dark table-striped border border-light-subtle border border-3">
+    <thead style="text-align:center">
+        <tr>
+            <th colspan="3">Observaciones y recomendaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th class="border-end">@Model.PobservacionesRecomendaciones</th>
+        </tr>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        document.getElementById('exportPDF').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            html2canvas(document.body).then(function(canvas) {
+                var imgData = canvas.toDataURL('image/png');
+                var pdf = new jsPDF('p', 'mm', 'a4');
+                var imgProps = pdf.getImageProperties(imgData);
+                var pdfWidth = pdf.internal.pageSize.getWidth();
+                var pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('ficha_tecnica.pdf');
+            });
+        });
+
+        document.getElementById('notificarCorreo').addEventListener('click', function () {
+            fetch('/DatosFichaTecnicas/EnviarFichaTecnica/@Model.IdDatosFichaTecnica', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Ficha técnica enviada correctamente');
+                } else {
+                    alert('Error al enviar la ficha técnica');
+                }
+            });
+        });
+    </script>
+}
