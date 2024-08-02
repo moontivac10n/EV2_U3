@@ -109,7 +109,19 @@
             Estado
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estado)
+            @{
+                string estado = "";
+                switch (Model.Estado)
+                {
+                    case "0":
+                        estado = "Activo";
+                        break;
+                    case "1":
+                        estado = "Inactivo";
+                        break;
+                }
+                @estado
+            }
         </dd>
         <hr style="background-color:black" />
 
