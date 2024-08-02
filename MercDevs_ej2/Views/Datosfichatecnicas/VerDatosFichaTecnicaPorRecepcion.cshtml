@@ -47,10 +47,14 @@
                     @Html.DisplayFor(modelItem => item.RecepcionEquipo.MarcaPc)
                 </td>
                 <td>
-                    <a asp-action="FichaTecnica" asp-route-id="@item.IdDatosFichaTecnica"><button type="button" class="btn btn-warning">Ver Ficha</button></a>
+                    <a asp-action="Diagnosticosolucionpordatosficha" asp-route-id="@item.IdDatosFichaTecnica"><button type="button" class="btn btn-info">D y Solución</button></a>
+                    <a asp-action="FichaTecnica" asp-route-id="@item.IdDatosFichaTecnica"><button type="button" class="btn btn-success">Ver Ficha</button></a>
                     <a asp-action="Edit" asp-route-id="@item.IdDatosFichaTecnica"><button type="button" class="btn btn-outline-primary">Editar</button></a>
                     <a asp-action="Details" asp-route-id="@item.IdDatosFichaTecnica"><button type="button" class="btn btn-outline-warning">Detalles</button></a>
                     <a asp-action="Delete" asp-route-id="@item.IdDatosFichaTecnica"><button type="button" class="btn btn-outline-danger">Borrar</button></a>
+                    <form method="post" asp-action="Finalizar" asp-route-id="@item?.IdDatosFichaTecnica">
+                        <button type="submit" class="btn btn-warning">Finalizar Ficha Tecnica</button>
+                    </form>
                 </td>
             </tr>
         }

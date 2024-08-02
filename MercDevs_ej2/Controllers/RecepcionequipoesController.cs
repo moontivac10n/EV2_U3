@@ -25,16 +25,33 @@ namespace MercDevs_ej2.Controllers
         // GET: Recepcionequipoes
         public async Task<IActionResult> Index()
         {
-            var mercydevsEjercicio2Context = _context.Recepcionequipos.Include(r => r.IdClienteNavigation).Include(r => r.IdServicioNavigation);
+            var mercydevsEjercicio2Context = _context.Recepcionequipos.Include(r => r.IdClienteNavigation).Include(r => r.IdServicioNavigation).OrderBy(r => r.Id);
             return View(await mercydevsEjercicio2Context.ToListAsync());
         }
 
-        public async Task<IActionResult> IndexId(int id)
+        // GET: Recepcionequipoes/IndexId
+        [HttpGet]
+        [Route("Recepcionequipoes/IndexId/{idCliente}")]
+        public async Task<IActionResult> IndexId(int idCliente)
         {
-            var mercydevsEjercicio2Context = _context.Recepcionequipos
-                                                          .Include(r => r.IdServicioNavigation)
-                                                          .Where(r => r.IdCliente == id);
-            return View (await mercydevsEjercicio2Context.ToListAsync());
+            // Obtener las recepciones para el cliente especificado
+            var recepciones = _context.Recepcionequipos
+                                      .Include(r => r.IdServicioNavigation)
+                                      .Include(r => r.IdClienteNavigation)
+                                      .Where(r => r.IdCliente == idCliente);
+
+            // Obtener el cliente
+            var cliente = await _context.Clientes.FindAsync(idCliente);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+
+            // Pasar el cliente al ViewBag
+            ViewBag.ClienteNombre = $"{cliente.Nombre} {cliente.Apellido}";
+            ViewBag.IdCliente = idCliente;
+
+            return View(await recepciones.ToListAsync());
         }
 
         // GET: Recepcionequipoes/Details/5
@@ -77,10 +94,60 @@ namespace MercDevs_ej2.Controllers
         }
 
         // GET: Recepcionequipoes/Create
-        public IActionResult Create()
+        public IActionResult Create(int? idCliente)
         {
-            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente");
+            // Obtener los clientes para el dropdown
+            var clientes = _context.Clientes.ToList();
+
+            if (idCliente.HasValue)
+            {
+                // Si idCliente se proporciona, pasarlo como un valor oculto
+                ViewData["IdCliente"] = idCliente.Value;
+                ViewData["Clientes"] = new SelectList(clientes, "IdCliente", "IdCliente");
+            }
+            else
+            {
+                // Si idCliente no se proporciona, preparar el dropdown
+                ViewData["IdCliente"] = new SelectList(clientes, "IdCliente", "IdCliente");
+            }
+
             ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "IdServicio");
+            ViewData["TipoPc"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "PC Torre" },
+                new { Value = 1, Text = "Notebook" },
+                new { Value = 2, Text = "All-In-ONE" }
+            }, "Value", "Text");
+
+            ViewData["CapacidadRam"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "4 GB" },
+                new { Value = 1, Text = "6 GB" },
+                new { Value = 2, Text = "8 GB" },
+                new { Value = 3, Text = "12 GB" },
+                new { Value = 4, Text = "Otra" }
+            }, "Value", "Text");
+
+            ViewData["TipoAlmacenamiento"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "HDD" },
+                new { Value = 1, Text = "SSD Sata" },
+                new { Value = 2, Text = "SSD M.2" },
+                new { Value = 3, Text = "SSD NVM M.2" }
+            }, "Value", "Text");
+
+            ViewData["TipoGpu"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "Chip Integrado" },
+                new { Value = 1, Text = "Tarjeta" }
+            }, "Value", "Text");
+
+            ViewData["Estado"] = new SelectList(new[]
+            {
+                new { Value = 1, Text = "Activo" },
+                new { Value = 0, Text = "Inactivo" }
+            }, "Value", "Text");
+
             return View();
         }
 
@@ -90,56 +157,22 @@ namespace MercDevs_ej2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-
-
-
-
         public async Task<IActionResult> Create([Bind("Id,IdCliente,IdServicio,Fecha,TipoPc,Accesorio,MarcaPc,ModeloPc,Nserie,CapacidadRam,TipoAlmacenamiento,CapacidadAlmacenamiento,TipoGpu,Grafico,Estado")] Recepcionequipo recepcionequipo)
         {
-            // primero quise hacer un if para validar los dato propios de la tabla, pero era muy largo
-            //le pregunte a gpt-san como podia factorizar mejor el codigo y me explico que podia hacer un diccionario y recorrerlo
-            //con el foreach se hizo rapido, entendi bastante con esto, puedo hacer filtros generales con el if y 
-            //aplicarlo a un monton de datos usando diccionarios y foreach, esto acomoda mucho las cosas ojito O.O
-
-            var tablaDato = new Dictionary<string, object?>
-            //llamo al nombre del valor que quiero atribuir, y luego llamo al mismo valor, asi lo asigno a mi diccionario
-    {
-        { nameof(recepcionequipo.MarcaPc), recepcionequipo.MarcaPc  },
-        { nameof(recepcionequipo.Fecha), recepcionequipo.Fecha },
-        { nameof(recepcionequipo.TipoPc), recepcionequipo.TipoPc },
-        { nameof(recepcionequipo.Accesorio), recepcionequipo.Accesorio },
-        { nameof(recepcionequipo.ModeloPc), recepcionequipo.ModeloPc },
-        { nameof(recepcionequipo.Nserie), recepcionequipo.Nserie },
-        { nameof(recepcionequipo.CapacidadRam), recepcionequipo.CapacidadRam },
-        { nameof(recepcionequipo.TipoAlmacenamiento), recepcionequipo.TipoAlmacenamiento },
-        { nameof(recepcionequipo.CapacidadAlmacenamiento), recepcionequipo.CapacidadAlmacenamiento },
-        { nameof(recepcionequipo.TipoGpu), recepcionequipo.TipoGpu },
-        { nameof(recepcionequipo.Grafico), recepcionequipo.Grafico },
-        //{ nameof(recepcionequipo.Estado), recepcionequipo.Estado }
-    };
-
-            // Verificar si alguna de las propiedades es nula o en el caso de int, si es igual a 0
-            //quiero ver tambien si puedo validar una fecha, eso sera interesante :}
-            //o quiza lo mejor sea agregar la fecha desde el sistema del pc, seria lo mas acertado 
-            foreach (var dato in tablaDato)
+            if (recepcionequipo.TipoGpu != null)
             {
-                if (dato.Value == null || (dato.Value is int intValue && intValue == 0))
-                {
-                    // Si cualquier valor no cumple con los requisitos, se configura ViewData y se retorna la vista
-                    ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", recepcionequipo.IdCliente);
-                    ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "IdServicio", recepcionequipo.IdServicio);
-                    return View(recepcionequipo);
-                }
+                // Si el estado es válido, establece el estado por defecto y guarda en la base de datos
+                recepcionequipo.Estado = "1"; // Asegúrate de que el estado sea el correcto
+                _context.Add(recepcionequipo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index)); // Redirige a la vista de índice o la página deseada
             }
 
-            // Si todas las propiedades cumplen con los requisitos, se guarda en la base de datos
-            _context.Add(recepcionequipo);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            // Si hay errores, vuelve a mostrar el formulario con los datos ingresados
+            ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", recepcionequipo.IdCliente);
+            ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "IdServicio", recepcionequipo.IdServicio);
+            return View(recepcionequipo);
         }
-
-
-
 
 
         // GET: Recepcionequipoes/Edit/5
@@ -157,6 +190,43 @@ namespace MercDevs_ej2.Controllers
             }
             ViewData["IdCliente"] = new SelectList(_context.Clientes, "IdCliente", "IdCliente", recepcionequipo.IdCliente);
             ViewData["IdServicio"] = new SelectList(_context.Servicios, "IdServicio", "IdServicio", recepcionequipo.IdServicio);
+
+            ViewData["TipoPc"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "PC Torre" },
+                new { Value = 1, Text = "Notebook" },
+                new { Value = 2, Text = "All-In-ONE" }
+            }, "Value", "Text");
+
+            ViewData["CapacidadRam"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "4 GB" },
+                new { Value = 1, Text = "6 GB" },
+                new { Value = 2, Text = "8 GB" },
+                new { Value = 3, Text = "12 GB" },
+                new { Value = 4, Text = "Otra" }
+            }, "Value", "Text");
+
+            ViewData["TipoAlmacenamiento"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "HDD" },
+                new { Value = 1, Text = "SSD Sata" },
+                new { Value = 2, Text = "SSD M.2" },
+                new { Value = 3, Text = "SSD NVM M.2" }
+            }, "Value", "Text");
+
+            ViewData["TipoGpu"] = new SelectList(new[]
+            {
+                new { Value = 0, Text = "Chip Integrado" },
+                new { Value = 1, Text = "Tarjeta" }
+            }, "Value", "Text");
+
+            ViewData["Estado"] = new SelectList(new[]
+            {
+                new { Value = 1, Text = "Activo" },
+                new { Value = 0, Text = "Inactivo" }
+            }, "Value", "Text");
+
             return View(recepcionequipo);
         }
 
@@ -267,7 +337,7 @@ namespace MercDevs_ej2.Controllers
                 return NotFound();
             }
 
-            recepcionEquipo.Estado = "Finalizar";
+            recepcionEquipo.Estado = "0";
 
             try
             {

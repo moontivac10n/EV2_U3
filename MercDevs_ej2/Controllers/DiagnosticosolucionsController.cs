@@ -157,6 +157,45 @@ namespace MercDevs_ej2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Diagnosticosolucions/CreateDiagnostico/5
+        [Authorize]
+        public IActionResult CreateDiagnostico(int datosFichaTecnicaId)
+        {
+            // Check if the DatosFichaTecnicaId exists
+            var datosFichaTecnica = _context.Datosfichatecnicas.FirstOrDefault(d => d.IdDatosFichaTecnica == datosFichaTecnicaId);
+            if (datosFichaTecnica == null)
+            {
+                return NotFound(); // Return a 404 error if the Id does not exist
+            }
+
+            ViewData["DatosFichaTecnicaId"] = datosFichaTecnicaId;
+            return View(new Diagnosticosolucion { DatosFichaTecnicaId = datosFichaTecnicaId });
+        }
+
+        // POST: Diagnosticosolucions/CreateDiagnostico
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateDiagnostico([Bind("IdDiagnosticoSolucion,DescripcionDiagnostico,DescripcionSolucion,DatosFichaTecnicaId")] Diagnosticosolucion diagnosticosolucion)
+        {
+            // Ensure that the foreign key is set and valid
+            if (!_context.Datosfichatecnicas.Any(d => d.IdDatosFichaTecnica == diagnosticosolucion.DatosFichaTecnicaId))
+            {
+                ModelState.AddModelError("", "Invalid DatosFichaTecnicaId.");
+                return View(diagnosticosolucion);
+            }
+
+            if (diagnosticosolucion.IdDiagnosticoSolucion != null) // Check if ModelState is valid instead of just checking IdDiagnosticoSolucion
+            {
+                _context.Add(diagnosticosolucion);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Diagnosticosolucionpordatosficha", "Datosfichatecnicas", new { id = diagnosticosolucion.DatosFichaTecnicaId });
+            }
+
+            ViewData["DatosFichaTecnicaId"] = diagnosticosolucion.DatosFichaTecnicaId;
+            return View(diagnosticosolucion);
+        }
+
         private bool DiagnosticosolucionExists(int id)
         {
             return _context.Diagnosticosolucions.Any(e => e.IdDiagnosticoSolucion == id);

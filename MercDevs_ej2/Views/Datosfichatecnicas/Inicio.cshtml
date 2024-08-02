@@ -43,6 +43,15 @@
                 @Html.DisplayNameFor(model => model.RecepcionEquipo)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.RecepcionEquipo.MarcaPc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecepcionEquipo.ModeloPc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecepcionEquipo.Nserie)
+            </th>
+            <th>
                 Acciones
             </th>
         </tr>
@@ -80,6 +89,15 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RecepcionEquipo.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecepcionEquipo.MarcaPc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecepcionEquipo.ModeloPc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecepcionEquipo.Nserie)
                 </td>
                 <td>
                     <a asp-action="Diagnosticosolucionpordatosficha" asp-route-id="@item.IdDatosFichaTecnica"><button type="button" class="btn btn-warning">Ver Diagnostico</button></a>

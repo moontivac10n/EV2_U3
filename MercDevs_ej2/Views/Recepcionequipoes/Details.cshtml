@@ -21,7 +21,22 @@
             Tipo de PC
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TipoPc)
+            @{
+                string tipopc = "";
+                switch (Model.TipoPc)
+                {
+                    case 0:
+                        tipopc = "Pc Torre";
+                        break;
+                    case 1:
+                        tipopc = "Notebook";
+                        break;
+                    case 2:
+                        tipopc = "All in one";
+                        break;
+                }
+                @tipopc
+            }
         </dd>
         <hr style="background-color:black" />
 
@@ -65,7 +80,28 @@
             Capacidad de Ram
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CapacidadRam)
+            @{
+                string capacidadram = "";
+                switch (Model.CapacidadRam)
+                {
+                    case 0:
+                        capacidadram = "4 GB";
+                        break;
+                    case 1:
+                        capacidadram = "6 GB";
+                        break;
+                    case 2:
+                        capacidadram = "8 GB";
+                        break;
+                    case 3:
+                        capacidadram = "12 GB";
+                        break;
+                    case 4:
+                        capacidadram = "Otra";
+                        break;
+                }
+                @capacidadram
+            }
         </dd>
         <hr style="background-color:black" />
 
@@ -74,7 +110,25 @@
             Tipo almacenamiento
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TipoAlmacenamiento)
+            @{
+                string tipoalmacenamiento = "";
+                switch (Model.TipoAlmacenamiento)
+                {
+                    case 0:
+                        tipoalmacenamiento = "HDD";
+                        break;
+                    case 1:
+                        tipoalmacenamiento = "SSD SATA";
+                        break;
+                    case 2:
+                        tipoalmacenamiento = "SSD M.2";
+                        break;
+                    case 3:
+                        tipoalmacenamiento = "SS2 NVM M.2";
+                        break;
+                }
+                @tipoalmacenamiento
+            }
         </dd>
         <hr style="background-color:black" />
 
@@ -92,7 +146,19 @@
             Tipo Gpu
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TipoGpu)
+            @{
+                string tipogpu = "";
+                switch (Model.TipoGpu)
+                {
+                    case 0:
+                        tipogpu = "Chip Integrado";
+                        break;
+                    case 1:
+                        tipogpu = "Tarjeta";
+                        break;
+                }
+                @tipogpu
+            }
         </dd>
         <hr style="background-color:black" />
 
@@ -113,10 +179,10 @@
                 string estado = "";
                 switch (Model.Estado)
                 {
-                    case "0":
+                    case "1":
                         estado = "Activo";
                         break;
-                    case "1":
+                    case "0":
                         estado = "Inactivo";
                         break;
                 }

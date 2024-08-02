@@ -1,0 +1,29 @@
+﻿@model MercDevs_ej2.Models.Diagnosticosolucion
+
+@{
+    ViewData["Title"] = "Crear Diagnóstico y Solución";
+}
+
+<h1>Crear Diagnóstico y Solución</h1>
+
+<form asp-action="CreateDiagnostico">
+    <div class="form-group">
+        <label asp-for="DescripcionDiagnostico" class="control-label"></label>
+        <input asp-for="DescripcionDiagnostico" class="form-control" />
+        <span asp-validation-for="DescripcionDiagnostico" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DescripcionSolucion" class="control-label"></label>
+        <input asp-for="DescripcionSolucion" class="form-control" />
+        <span asp-validation-for="DescripcionSolucion" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="DatosFichaTecnicaId" value="@ViewData["DatosFichaTecnicaId"]" />
+
+    <div class="form-group">
+        <input type="submit" value="Crear" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Diagnosticosolucionpordatosficha" asp-route-id="@ViewData["DatosFichaTecnicaId"]">Back to List</a>
+</div>
